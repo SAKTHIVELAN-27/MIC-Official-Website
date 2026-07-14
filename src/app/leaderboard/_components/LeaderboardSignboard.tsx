@@ -8,15 +8,15 @@ interface LeaderboardEntry {
 }
 
 const FFCS_DATA: LeaderboardEntry[] = [
-  { name: 'Alex', points: 980 },
-  { name: 'Alex', points: 980 },
-  { name: 'Alex', points: 980 },
+  { name: 'Gowreesh V T', points: 980 },
+  { name: 'Surya', points: 950 },
+  { name: 'Sakthivelan', points: 920 },
 ];
 
 const NON_FFCS_DATA: LeaderboardEntry[] = [
-  { name: 'David', points: 940 },
-  { name: 'Emily', points: 910 },
-  { name: 'Frank', points: 880 },
+  { name: 'Dhakshini', points: 940 },
+  { name: 'Akash Vishnu', points: 910 },
+  { name: 'Rahul K', points: 880 },
 ];
 
 // Custom pixel art Gold Trophy SVG (with flexShrink and explicit sizing to prevent collapse)
