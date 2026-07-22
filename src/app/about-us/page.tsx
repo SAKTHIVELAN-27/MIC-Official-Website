@@ -221,34 +221,160 @@ const AboutUsPage: React.FC = () => {
   if (isMobile) {
     return (
       <div
-        className="w-full min-h-[100dvh] overflow-x-hidden overflow-y-auto flex flex-col items-center select-none"
+        className="w-full min-h-[100dvh] overflow-x-hidden overflow-y-auto flex flex-col items-center select-none relative"
         style={{ background: "linear-gradient(180deg,#1188EE 0%,#0E8AEA 25%,#1093EB 35%,#1197EC 46%,#16B6F4 52%,#10CBF1 56%,#0FC6F1 60%,#15DEF0 65%,#15DEF0 81%)" }}
       >
         <style>{`
           body { background:linear-gradient(180deg,#1188EE 0%,#0E8AEA 25%,#1093EB 35%,#1197EC 46%,#16B6F4 52%,#10CBF1 56%,#0FC6F1 60%,#15DEF0 65%,#15DEF0 81%) !important; overflow-y:auto !important; }
           img[alt="MIC Logo"],img[src*="mic-logo"]{ display:none !important; }
           button[aria-label="Open navigation"],.z-\[60\]{ display:none !important; }
+
+          /* Ghost floating and side to side animations */
+          .ghost-bob {
+            animation: ghost-bob-anim 2.5s ease-in-out infinite;
+          }
+          .ghost-look-right {
+            animation: ghost-look-right-anim 4s steps(1) infinite;
+            transform-origin: center;
+          }
+          .ghost-look-left {
+            animation: ghost-look-left-anim 4s steps(1) infinite;
+            transform-origin: center;
+          }
+          
+          @keyframes ghost-bob-anim {
+            0%, 100% {
+              transform: translateY(0);
+            }
+            50% {
+              transform: translateY(-8px);
+            }
+          }
+          @keyframes ghost-look-right-anim {
+            0%, 100% {
+              transform: scaleX(-1);
+            }
+            50% {
+              transform: scaleX(1);
+            }
+          }
+          @keyframes ghost-look-left-anim {
+            0%, 100% {
+              transform: scaleX(1);
+            }
+            50% {
+              transform: scaleX(-1);
+            }
+          }
         `}</style>
+
+        {/* Cityscape backdrop on mobile */}
+        <div 
+          className="absolute left-0 right-0 pointer-events-none select-none z-0"
+          style={{ 
+            bottom: "56px", 
+            height: "140px", 
+            backgroundImage: "url('/cityscape.svg')", 
+            backgroundRepeat: "repeat-x", 
+            backgroundPosition: "bottom", 
+            backgroundSize: "auto 100%", 
+            opacity: 0.35,
+            imageRendering: "pixelated"
+          }} 
+        />
+        
+        {/* Bushes backdrop on mobile */}
+        <div 
+          className="absolute left-0 right-0 pointer-events-none select-none z-0"
+          style={{ 
+            bottom: "52px", 
+            height: "100px", 
+            backgroundImage: "url('/pixel_bushes.svg')", 
+            backgroundRepeat: "repeat-x", 
+            backgroundPosition: "bottom", 
+            backgroundSize: "auto 100%",
+            imageRendering: "pixelated"
+          }} 
+        />
         
         {/* Content wrapper with px-4, flex-grow to push footer down */}
-        <div className="w-full flex-grow flex flex-col items-center pt-8 px-4 pb-8 gap-6">
+        <div className="w-full flex-grow flex flex-col items-center pt-8 px-4 pb-8 gap-6 z-10 relative">
           <div className="w-full flex justify-between items-center z-40 px-2 shrink-0">
             <Link href="/main"><img src="/mic_logo_pixel.svg" alt="MIC Pixel Logo" className="w-12 h-12" style={{ imageRendering:"pixelated" }} /></Link>
             <Link href="/main"><img src="/close_button.svg" alt="Close" className="w-10 h-10" /></Link>
           </div>
           <h1 className="font-press-start text-2xl text-black tracking-wider text-center drop-shadow-[3px_3px_0px_rgba(255,255,255,0.4)]">About Us</h1>
-          {CARDS.map(card => (
-            <div key={card.id} className="relative flex flex-col items-center justify-start text-center shrink-0 w-full max-w-[320px]"
-              style={{ height:275, backgroundImage:`url(${card.bg})`, backgroundSize:"100% 100%", backgroundRepeat:"no-repeat", imageRendering:"pixelated", padding:"22px 16px 14px" }}
-            >
-              <img src="/images/about_us_assets/cherry.svg" alt="Cherry" className="absolute" style={{ width:58,height:58,top:-20,left:-14,imageRendering:"pixelated" }} />
-              <h2 className="font-press-start text-black font-extrabold uppercase text-center mb-2" style={{ fontSize:13, lineHeight:1.5 }}>{card.title}</h2>
-              <div className="flex-grow overflow-y-auto w-full" style={{ scrollbarWidth:"none" }}>
-                <p className="font-ibm-plex-mono text-black font-semibold text-center" style={{ fontSize:12.5, lineHeight:1.55 }}>{card.desc}</p>
+          
+          {CARDS.map((card, idx) => (
+            <React.Fragment key={card.id}>
+              {/* Card wrapper to position left/right ghosts absolutely */}
+              <div className="relative w-full flex justify-center">
+                <div 
+                  className="relative flex flex-col items-center justify-start text-center shrink-0"
+                  style={{ 
+                    width: "clamp(220px, 65vw, 250px)", 
+                    height: 270, 
+                    backgroundImage: `url(${card.bg})`, 
+                    backgroundSize: "100% 100%", 
+                    backgroundRepeat: "no-repeat", 
+                    imageRendering: "pixelated", 
+                    padding: "22px 16px 14px" 
+                  }}
+                >
+                  <img src="/images/about_us_assets/cherry.svg" alt="Cherry" className="absolute" style={{ width:54, height:54, top:-18, left:-12, imageRendering:"pixelated" }} />
+                  <h2 className="font-press-start text-black font-extrabold uppercase text-center mb-2" style={{ fontSize: 13, lineHeight: 1.5 }}>{card.title}</h2>
+                  <div className="flex-grow overflow-y-auto w-full" style={{ scrollbarWidth: "none" }}>
+                    <p className="font-ibm-plex-mono text-black font-semibold text-center" style={{ fontSize: 12.5, lineHeight: 1.55 }}>{card.desc}</p>
+                  </div>
+                </div>
+
+                {/* Ghosts relative to Card 1 (index 0) - placed slightly overlapping to stay on screen */}
+                {idx === 0 && (
+                  <>
+                    <div className="absolute z-20 pointer-events-none ghost-bob" style={{ left: "-18px", top: "calc(50% - 24px)", width: 45, height: 48, animationDelay: "0s" }}>
+                      <img src="/images/about_us_assets/ghosto.svg" alt="Clyde" className="w-full h-full ghost-look-right" style={{ imageRendering: "pixelated", animationDelay: "0s" }} />
+                    </div>
+                    <div className="absolute z-20 pointer-events-none ghost-bob" style={{ right: "-18px", top: "10%", width: 45, height: 48, animationDelay: "0.5s" }}>
+                      <img src="/images/about_us_assets/ghostr.svg" alt="Blinky" className="w-full h-full ghost-look-left" style={{ imageRendering: "pixelated", animationDelay: "0.5s" }} />
+                    </div>
+                  </>
+                )}
+
+                {/* Ghosts relative to Card 2 (index 1) - placed slightly overlapping to stay on screen */}
+                {idx === 1 && (
+                  <div className="absolute z-20 pointer-events-none ghost-bob" style={{ right: "-18px", top: "calc(50% - 24px)", width: 45, height: 48, animationDelay: "1s" }}>
+                    <img src="/images/about_us_assets/ghostb.png" alt="Inky" className="w-full h-full ghost-look-left" style={{ imageRendering: "pixelated", animationDelay: "1s" }} />
+                  </div>
+                )}
               </div>
-            </div>
+
+              {/* Pacman moving back and forth horizontally in the mobile card gap */}
+              {idx === 0 && (
+                <div className="relative w-full h-12 my-2 flex justify-center items-center overflow-hidden">
+                  <motion.div
+                    className="absolute z-20 pointer-events-none"
+                    style={{
+                      left: 0,
+                      width: 48,
+                      height: 48,
+                    }}
+                    animate={{
+                      x: ["10vw", "75vw", "10vw"],
+                      scaleX: [1, 1, -1, -1, 1],
+                    }}
+                    transition={{
+                      x: { repeat: Infinity, duration: 9, ease: "linear" },
+                      scaleX: { repeat: Infinity, duration: 9, ease: "linear", times: [0, 0.499, 0.5, 0.999, 1] }
+                    }}
+                  >
+                    <PacmanIcon style={{ width: "100%", height: "100%" }} />
+                  </motion.div>
+                </div>
+              )}
+            </React.Fragment>
           ))}
-          <div className="relative w-full max-w-[320px] shrink-0 mb-2">
+
+          <div className="relative w-full max-w-[260px] shrink-0 mb-4 flex justify-center">
             <img src="/images/about_us_assets/contact_details.svg" alt="Contact Us" className="w-full h-auto" />
             <div className="absolute flex items-center justify-center gap-5" style={{ top:"54%", left:"50%", transform:"translate(-50%,0)" }}>
               {[
@@ -262,11 +388,16 @@ const AboutUsPage: React.FC = () => {
                 </a>
               ))}
             </div>
+            
+            {/* Pinky near the Contact Details / Grass bottom */}
+            <div className="absolute z-20 pointer-events-none ghost-bob" style={{ left: "-15px", bottom: "-10px", width: 45, height: 48, animationDelay: "1.5s" }}>
+              <img src="/images/about_us_assets/ghost.svg" alt="Pinky" className="w-full h-full ghost-look-right" style={{ imageRendering: "pixelated", animationDelay: "1.5s" }} />
+            </div>
           </div>
         </div>
 
         {/* Footer attached directly to screen bottom without padding */}
-        <div className="w-full h-14 border-t-4 border-black bg-[#DD9955] overflow-hidden flex items-center shrink-0 mt-auto">
+        <div className="w-full h-14 border-t-4 border-black bg-[#DD9955] overflow-hidden flex items-center shrink-0 mt-auto z-10 relative">
           <div className="flex whitespace-nowrap animate-marquee">
             {[0,1].map(r => (
               <span key={r} className="inline-flex items-center shrink-0 text-[11px] text-[#CC7700] uppercase font-bold font-press-start">
