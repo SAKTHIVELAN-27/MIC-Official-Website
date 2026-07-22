@@ -111,6 +111,21 @@ const CubeNavbar: React.FC = () => {
           border: 3px solid #1A3A5C;
           box-shadow: inset 0 0 0 2px #0D2844;
         }
+        .cube-nav-scroll {
+          max-height: calc(100vh - 120px);
+          overflow-y: auto;
+          scrollbar-width: thin;
+          scrollbar-color: #1B7A9E transparent;
+        }
+        .cube-nav-scroll::-webkit-scrollbar {
+          width: 4px;
+        }
+        .cube-nav-scroll::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .cube-nav-scroll::-webkit-scrollbar-thumb {
+          background: #1B7A9E;
+        }
       `}</style>
       {/* Content */}
       <div style={{
@@ -120,7 +135,7 @@ const CubeNavbar: React.FC = () => {
         zIndex: 4,
         padding: '8px 4px',
       }}>
-        <nav className="font-press-start" style={{ padding: '16px 0 0 0', width: '100%' }}>
+        <nav className="font-press-start cube-nav-scroll" style={{ padding: '16px 0 0 0', width: '100%' }}>
           {navItems.map((item) => (
             <a
               key={item.id}
