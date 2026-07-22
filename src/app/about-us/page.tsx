@@ -26,10 +26,10 @@ const CARDS = [
 ];
 
 // Fixed card dimensions in 1024-tall canvas units — all cards sit at the SAME top (parallel)
-const CARD_W      = 305;
-const CARD_H      = 345;
-const CARD_GAP    = 82;
-const CARD_TOP    = 155;   // same for all three cards — no stagger
+const CARD_W      = 330;
+const CARD_H      = 290;
+const CARD_GAP    = 70;
+const CARD_TOP    = 210;   // same for all three cards — no stagger
 
 function MysteryCard({
   title, desc, bg, left,
@@ -81,14 +81,14 @@ function MysteryCard({
       >
         <h2
           className="font-press-start text-black font-extrabold tracking-wide uppercase text-center mb-3"
-          style={{ fontSize: 13, lineHeight: 1.4 }}
+          style={{ fontSize: 15, lineHeight: 1.4 }}
         >
           {title}
         </h2>
         <div className="flex-grow overflow-y-auto w-full" style={{ scrollbarWidth: "none" }}>
           <p
             className="font-ibm-plex-mono text-black font-semibold text-center"
-            style={{ fontSize: 11.5, lineHeight: 1.6 }}
+            style={{ fontSize: 13.5, lineHeight: 1.6 }}
           >
             {desc}
           </p>
@@ -97,6 +97,80 @@ function MysteryCard({
     </div>
   );
 }
+
+const PacmanIcon: React.FC<{ style?: React.CSSProperties }> = ({ style }) => {
+  const [isOpen, setIsOpen] = useState(true);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIsOpen(prev => !prev);
+    }, 150);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <svg 
+      width="100%" 
+      height="100%" 
+      viewBox="0 0 75 75" 
+      fill="none" 
+      xmlns="http://www.w3.org/2000/svg"
+      style={style}
+    >
+      {/* Outline */}
+      <rect width="31.0976" height="5.35714" transform="matrix(-1 0 0 1 56.7075 0)" fill="black"/>
+      <rect width="31.0976" height="5.35714" transform="matrix(-1 0 0 1 54.8779 69.6426)" fill="black"/>
+      <rect width="9.14634" height="5.35714" transform="matrix(-1 0 0 1 25.6094 5.35742)" fill="black"/>
+      <rect width="7.31707" height="5.35714" transform="matrix(-1 0 0 1 23.7803 64.2852)" fill="black"/>
+      <rect width="6.40244" height="5.35714" transform="matrix(-1 0 0 1 16.4634 58.9287)" fill="black"/>
+      <rect width="6.40244" height="5.35714" transform="matrix(-1 0 0 1 17.3779 10.7148)" fill="black"/>
+      <rect width="6.40244" height="5.35714" transform="matrix(-1 0 0 1 63.1094 5.35742)" fill="black"/>
+      <rect width="6.40244" height="5.35714" transform="matrix(-1 0 0 1 69.5122 10.7148)" fill="black"/>
+      <rect width="6.40244" height="5.35714" transform="matrix(-1 0 0 1 69.5122 58.9287)" fill="black"/>
+      <rect width="8.23171" height="5.35714" transform="matrix(-1 0 0 1 63.1094 64.2852)" fill="black"/>
+      <rect width="5.4878" height="8.92857" transform="matrix(-1 0 0 1 10.9756 16.0713)" fill="black"/>
+      <rect width="5.4878" height="8.92857" transform="matrix(-1 0 0 1 75 16.0713)" fill="black"/>
+      <rect width="5.4878" height="8.92857" transform="matrix(-1 0 0 1 75 50)" fill="black"/>
+      <rect width="5.4878" height="8.92857" transform="matrix(-1 0 0 1 10.0611 50)" fill="black"/>
+      <rect width="5.4878" height="25" transform="matrix(-1 0 0 1 5.48781 25)" fill="black"/>
+
+      {/* Yellow Fill Body */}
+      <rect width="31.0976" height="5.35714" transform="matrix(-1 0 0 1 56.7075 5.35742)" fill="#F8EB39"/>
+      <rect width="31.0976" height="5.35714" transform="matrix(-1 0 0 1 54.8779 64.2861)" fill="#F8EB39"/>
+      <rect width="46.6463" height="5.35714" transform="matrix(-1 0 0 1 63.1094 10.7148)" fill="#F8EB39"/>
+      <rect width="46.6463" height="5.35714" transform="matrix(-1 0 0 1 63.1094 58.9287)" fill="#F8EB39"/>
+      <rect width="49.3902" height="5.35714" transform="matrix(-1 0 0 1 54.8779 25)" fill="#F8EB39"/>
+      <rect width="49.3902" height="5.35714" transform="matrix(-1 0 0 1 54.8779 44.6436)" fill="#F8EB39"/>
+      <rect width="58.5366" height="8.92857" transform="matrix(-1 0 0 1 69.5122 16.0723)" fill="#F8EB39"/>
+      <rect width="59.4512" height="8.92857" transform="matrix(-1 0 0 1 69.5122 50)" fill="#F8EB39"/>
+
+      {/* Mouth Area - Toggled between open (black) and closed (yellow) */}
+      <rect width="31.0976" height="5.35714" transform="matrix(-1 0 0 1 42.0733 34.8213)" fill={isOpen ? "black" : "#F8EB39"}/>
+      <rect width="31.0976" height="5.35714" transform="matrix(-1 0 0 1 54.8779 39.2852)" fill={isOpen ? "black" : "#F8EB39"}/>
+      <rect width="31.0976" height="5.35714" transform="matrix(-1 0 0 1 54.8779 30.3574)" fill={isOpen ? "black" : "#F8EB39"}/>
+
+      {/* Inside Mouth Fill - Toggled */}
+      <rect width="31.0976" height="5.35714" transform="matrix(-1 0 0 1 42.0733 30.3574)" fill="#F8EB39"/>
+      <rect width="20.122" height="5.35714" transform="matrix(-1 0 0 1 25.6094 35.7148)" fill="#F8EB39"/>
+      <rect width="36.5854" height="5.35714" transform="matrix(-1 0 0 1 42.0733 39.2861)" fill="#F8EB39"/>
+
+      {/* When mouth is closed, we need to show the outline of the right side, otherwise it's just black outline when open */}
+      {isOpen ? (
+        <>
+          <rect width="31.0976" height="5.35714" transform="matrix(-1 0 0 1 69.5122 25)" fill="black"/>
+          <rect width="31.0976" height="5.35714" transform="matrix(-1 0 0 1 69.5122 44.6426)" fill="black"/>
+        </>
+      ) : (
+        <>
+          <rect width="31.0976" height="5.35714" transform="matrix(-1 0 0 1 69.5122 25)" fill="#F8EB39"/>
+          <rect width="31.0976" height="5.35714" transform="matrix(-1 0 0 1 69.5122 44.6426)" fill="#F8EB39"/>
+          {/* Closed mouth right border */}
+          <rect width="5.4878" height="25" transform="matrix(-1 0 0 1 75 25)" fill="black"/>
+        </>
+      )}
+    </svg>
+  );
+};
 
 const AboutUsPage: React.FC = () => {
   const [scale, setScale]           = useState(1);
@@ -147,46 +221,183 @@ const AboutUsPage: React.FC = () => {
   if (isMobile) {
     return (
       <div
-        className="w-full min-h-[100dvh] overflow-x-hidden overflow-y-auto flex flex-col items-center py-8 px-4 gap-6 select-none"
+        className="w-full min-h-[100dvh] overflow-x-hidden overflow-y-auto flex flex-col items-center select-none relative"
         style={{ background: "linear-gradient(180deg,#1188EE 0%,#0E8AEA 25%,#1093EB 35%,#1197EC 46%,#16B6F4 52%,#10CBF1 56%,#0FC6F1 60%,#15DEF0 65%,#15DEF0 81%)" }}
       >
         <style>{`
           body { background:linear-gradient(180deg,#1188EE 0%,#0E8AEA 25%,#1093EB 35%,#1197EC 46%,#16B6F4 52%,#10CBF1 56%,#0FC6F1 60%,#15DEF0 65%,#15DEF0 81%) !important; overflow-y:auto !important; }
           img[alt="MIC Logo"],img[src*="mic-logo"]{ display:none !important; }
           button[aria-label="Open navigation"],.z-\[60\]{ display:none !important; }
+
+          /* Ghost floating and side to side animations */
+          .ghost-bob {
+            animation: ghost-bob-anim 2.5s ease-in-out infinite;
+          }
+          .ghost-look-right {
+            animation: ghost-look-right-anim 4s steps(1) infinite;
+            transform-origin: center;
+          }
+          .ghost-look-left {
+            animation: ghost-look-left-anim 4s steps(1) infinite;
+            transform-origin: center;
+          }
+          
+          @keyframes ghost-bob-anim {
+            0%, 100% {
+              transform: translateY(0);
+            }
+            50% {
+              transform: translateY(-8px);
+            }
+          }
+          @keyframes ghost-look-right-anim {
+            0%, 100% {
+              transform: scaleX(-1);
+            }
+            50% {
+              transform: scaleX(1);
+            }
+          }
+          @keyframes ghost-look-left-anim {
+            0%, 100% {
+              transform: scaleX(1);
+            }
+            50% {
+              transform: scaleX(-1);
+            }
+          }
         `}</style>
-        <div className="w-full flex justify-between items-center z-40 px-2 shrink-0">
-          <Link href="/main"><img src="/mic_logo_pixel.svg" alt="MIC Pixel Logo" className="w-12 h-12" style={{ imageRendering:"pixelated" }} /></Link>
-          <Link href="/main"><img src="/close_button.svg" alt="Close" className="w-10 h-10" /></Link>
-        </div>
-        <h1 className="font-press-start text-2xl text-black tracking-wider text-center drop-shadow-[3px_3px_0px_rgba(255,255,255,0.4)]">About Us</h1>
-        {CARDS.map(card => (
-          <div key={card.id} className="relative flex flex-col items-center justify-start text-center shrink-0 w-full max-w-[305px]"
-            style={{ height:300, backgroundImage:`url(${card.bg})`, backgroundSize:"100% 100%", backgroundRepeat:"no-repeat", imageRendering:"pixelated", padding:"22px 16px 14px" }}
-          >
-            <img src="/images/about_us_assets/cherry.svg" alt="Cherry" className="absolute" style={{ width:58,height:58,top:-20,left:-14,imageRendering:"pixelated" }} />
-            <h2 className="font-press-start text-black font-extrabold uppercase text-center mb-2" style={{ fontSize:12, lineHeight:1.5 }}>{card.title}</h2>
-            <div className="flex-grow overflow-y-auto w-full" style={{ scrollbarWidth:"none" }}>
-              <p className="font-ibm-plex-mono text-black font-semibold text-center" style={{ fontSize:10.5, lineHeight:1.55 }}>{card.desc}</p>
+
+        {/* Cityscape backdrop on mobile */}
+        <div 
+          className="absolute left-0 right-0 pointer-events-none select-none z-0"
+          style={{ 
+            bottom: "56px", 
+            height: "140px", 
+            backgroundImage: "url('/cityscape.svg')", 
+            backgroundRepeat: "repeat-x", 
+            backgroundPosition: "bottom", 
+            backgroundSize: "auto 100%", 
+            opacity: 0.35,
+            imageRendering: "pixelated"
+          }} 
+        />
+        
+        {/* Bushes backdrop on mobile */}
+        <div 
+          className="absolute left-0 right-0 pointer-events-none select-none z-0"
+          style={{ 
+            bottom: "52px", 
+            height: "100px", 
+            backgroundImage: "url('/pixel_bushes.svg')", 
+            backgroundRepeat: "repeat-x", 
+            backgroundPosition: "bottom", 
+            backgroundSize: "auto 100%",
+            imageRendering: "pixelated"
+          }} 
+        />
+        
+        {/* Content wrapper with px-4, flex-grow to push footer down */}
+        <div className="w-full flex-grow flex flex-col items-center pt-8 px-4 pb-8 gap-6 z-10 relative">
+          <div className="w-full flex justify-between items-center z-40 px-2 shrink-0">
+            <Link href="/main"><img src="/mic_logo_pixel.svg" alt="MIC Pixel Logo" className="w-12 h-12" style={{ imageRendering:"pixelated" }} /></Link>
+            <Link href="/main"><img src="/close_button.svg" alt="Close" className="w-10 h-10" /></Link>
+          </div>
+          <h1 className="font-press-start text-2xl text-black tracking-wider text-center drop-shadow-[3px_3px_0px_rgba(255,255,255,0.4)]">About Us</h1>
+          
+          {CARDS.map((card, idx) => (
+            <React.Fragment key={card.id}>
+              {/* Card wrapper to position left/right ghosts absolutely */}
+              <div className="relative w-full flex justify-center">
+                <div 
+                  className="relative flex flex-col items-center justify-start text-center shrink-0"
+                  style={{ 
+                    width: "clamp(220px, 65vw, 250px)", 
+                    height: 270, 
+                    backgroundImage: `url(${card.bg})`, 
+                    backgroundSize: "100% 100%", 
+                    backgroundRepeat: "no-repeat", 
+                    imageRendering: "pixelated", 
+                    padding: "22px 16px 14px" 
+                  }}
+                >
+                  <img src="/images/about_us_assets/cherry.svg" alt="Cherry" className="absolute" style={{ width:54, height:54, top:-18, left:-12, imageRendering:"pixelated" }} />
+                  <h2 className="font-press-start text-black font-extrabold uppercase text-center mb-2" style={{ fontSize: 13, lineHeight: 1.5 }}>{card.title}</h2>
+                  <div className="flex-grow overflow-y-auto w-full" style={{ scrollbarWidth: "none" }}>
+                    <p className="font-ibm-plex-mono text-black font-semibold text-center" style={{ fontSize: 12.5, lineHeight: 1.55 }}>{card.desc}</p>
+                  </div>
+                </div>
+
+                {/* Ghosts relative to Card 1 (index 0) - placed slightly overlapping to stay on screen */}
+                {idx === 0 && (
+                  <>
+                    <div className="absolute z-20 pointer-events-none ghost-bob" style={{ left: "-18px", top: "calc(50% - 24px)", width: 45, height: 48, animationDelay: "0s" }}>
+                      <img src="/images/about_us_assets/ghosto.svg" alt="Clyde" className="w-full h-full ghost-look-right" style={{ imageRendering: "pixelated", animationDelay: "0s" }} />
+                    </div>
+                    <div className="absolute z-20 pointer-events-none ghost-bob" style={{ right: "-18px", top: "10%", width: 45, height: 48, animationDelay: "0.5s" }}>
+                      <img src="/images/about_us_assets/ghostr.svg" alt="Blinky" className="w-full h-full ghost-look-left" style={{ imageRendering: "pixelated", animationDelay: "0.5s" }} />
+                    </div>
+                  </>
+                )}
+
+                {/* Ghosts relative to Card 2 (index 1) - placed slightly overlapping to stay on screen */}
+                {idx === 1 && (
+                  <div className="absolute z-20 pointer-events-none ghost-bob" style={{ right: "-18px", top: "calc(50% - 24px)", width: 45, height: 48, animationDelay: "1s" }}>
+                    <img src="/images/about_us_assets/ghostb.png" alt="Inky" className="w-full h-full ghost-look-left" style={{ imageRendering: "pixelated", animationDelay: "1s" }} />
+                  </div>
+                )}
+              </div>
+
+              {/* Pacman moving back and forth horizontally in the mobile card gap */}
+              {idx === 0 && (
+                <div className="relative w-full h-12 my-2 flex justify-center items-center overflow-hidden">
+                  <motion.div
+                    className="absolute z-20 pointer-events-none"
+                    style={{
+                      left: 0,
+                      width: 48,
+                      height: 48,
+                    }}
+                    animate={{
+                      x: ["10vw", "75vw", "10vw"],
+                      scaleX: [1, 1, -1, -1, 1],
+                    }}
+                    transition={{
+                      x: { repeat: Infinity, duration: 9, ease: "linear" },
+                      scaleX: { repeat: Infinity, duration: 9, ease: "linear", times: [0, 0.499, 0.5, 0.999, 1] }
+                    }}
+                  >
+                    <PacmanIcon style={{ width: "100%", height: "100%" }} />
+                  </motion.div>
+                </div>
+              )}
+            </React.Fragment>
+          ))}
+
+          <div className="relative w-full max-w-[260px] shrink-0 mb-4 flex justify-center">
+            <img src="/images/about_us_assets/contact_details.svg" alt="Contact Us" className="w-full h-auto" />
+            <div className="absolute flex items-center justify-center gap-5" style={{ top:"54%", left:"50%", transform:"translate(-50%,0)" }}>
+              {[
+                { href:"https://www.instagram.com/microsoft.innovations.vitc/?hl=en", src:"/images/about_us_assets/Frame 112.svg", alt:"Instagram" },
+                { href:"https://www.linkedin.com/company/microsoft-innovations-club-vitc/?originalSubdomain=in", src:"/images/about_us_assets/Frame 114.svg", alt:"LinkedIn" },
+                { href:"mailto:micvitcc@gmail.com", src:"/images/about_us_assets/Frame 116.svg", alt:"Mail" },
+              ].map(icon => (
+                <a key={icon.alt} href={icon.href} target={icon.href.startsWith("http")?"_blank":undefined} rel={icon.href.startsWith("http")?"noopener noreferrer":undefined}
+                  className="w-11 h-11 hover:scale-110 transition-transform">
+                  <img src={icon.src} alt={icon.alt} className="w-full h-full object-contain" style={{ imageRendering:"pixelated" }} />
+                </a>
+              ))}
+            </div>
+            
+            {/* Pinky near the Contact Details / Grass bottom */}
+            <div className="absolute z-20 pointer-events-none ghost-bob" style={{ left: "-15px", bottom: "-10px", width: 45, height: 48, animationDelay: "1.5s" }}>
+              <img src="/images/about_us_assets/ghost.svg" alt="Pinky" className="w-full h-full ghost-look-right" style={{ imageRendering: "pixelated", animationDelay: "1.5s" }} />
             </div>
           </div>
-        ))}
-        <div className="relative w-full max-w-[320px] shrink-0 mb-2">
-          <img src="/images/about_us_assets/contact_details.svg" alt="Contact Us" className="w-full h-auto" />
-          <div className="absolute flex items-center justify-center gap-5" style={{ top:"54%", left:"50%", transform:"translate(-50%,0)" }}>
-            {[
-              { href:"https://www.instagram.com/microsoft.innovations.vitc/?hl=en", src:"/images/about_us_assets/Frame 112.svg", alt:"Instagram" },
-              { href:"https://www.linkedin.com/company/microsoft-innovations-club-vitc/?originalSubdomain=in", src:"/images/about_us_assets/Frame 114.svg", alt:"LinkedIn" },
-              { href:"mailto:micvitcc@gmail.com", src:"/images/about_us_assets/Frame 116.svg", alt:"Mail" },
-            ].map(icon => (
-              <a key={icon.alt} href={icon.href} target={icon.href.startsWith("http")?"_blank":undefined} rel={icon.href.startsWith("http")?"noopener noreferrer":undefined}
-                className="w-11 h-11 hover:scale-110 transition-transform">
-                <img src={icon.src} alt={icon.alt} className="w-full h-full object-contain" style={{ imageRendering:"pixelated" }} />
-              </a>
-            ))}
-          </div>
         </div>
-        <div className="w-full h-14 border-t-4 border-black bg-[#DD9955] overflow-hidden flex items-center shrink-0">
+
+        {/* Footer attached directly to screen bottom without padding */}
+        <div className="w-full h-14 border-t-4 border-black bg-[#DD9955] overflow-hidden flex items-center shrink-0 mt-auto z-10 relative">
           <div className="flex whitespace-nowrap animate-marquee">
             {[0,1].map(r => (
               <span key={r} className="inline-flex items-center shrink-0 text-[11px] text-[#CC7700] uppercase font-bold font-press-start">
@@ -211,6 +422,44 @@ const AboutUsPage: React.FC = () => {
         body { background:linear-gradient(180deg,#1188EE 0%,#0E8AEA 25%,#1093EB 35%,#1197EC 46%,#16B6F4 52%,#10CBF1 56%,#0FC6F1 60%,#15DEF0 65%,#15DEF0 81%) !important; overflow:hidden !important; }
         img[alt="MIC Logo"],img[src*="mic-logo"]{ display:none !important; }
         button[aria-label="Open navigation"],.z-\[60\]{ display:none !important; }
+
+        /* Ghost floating and side to side animations */
+        .ghost-bob {
+          animation: ghost-bob-anim 2.5s ease-in-out infinite;
+        }
+        .ghost-look-right {
+          animation: ghost-look-right-anim 4s steps(1) infinite;
+          transform-origin: center;
+        }
+        .ghost-look-left {
+          animation: ghost-look-left-anim 4s steps(1) infinite;
+          transform-origin: center;
+        }
+        
+        @keyframes ghost-bob-anim {
+          0%, 100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-8px);
+          }
+        }
+        @keyframes ghost-look-right-anim {
+          0%, 100% {
+            transform: scaleX(-1);
+          }
+          50% {
+            transform: scaleX(1);
+          }
+        }
+        @keyframes ghost-look-left-anim {
+          0%, 100% {
+            transform: scaleX(1);
+          }
+          50% {
+            transform: scaleX(-1);
+          }
+        }
       `}</style>
 
       {/* Canvas scaled to fill viewport */}
@@ -259,58 +508,126 @@ const AboutUsPage: React.FC = () => {
           />
         ))}
 
-        {/* ── Pac-Man running left → right, looping ── */}
-        <motion.img
-          src="/images/about_us_assets/pacman.svg"
-          alt="Pacman"
-          draggable={false}
-          className="absolute z-15 pointer-events-none"
-          style={{ top: ANIM_Y, width: 72, height: 72, imageRendering: "pixelated" }}
-          animate={{ x: [-90, canvasWidth + 90] }}
-          transition={{ repeat: Infinity, duration: 9, ease: "linear", repeatDelay: 0 }}
-        />
+        {/* ── Pacman & Ghost Figma Layout & Animations ── */}
+        {(() => {
+          const pacmanLeft = groupLeft + 1.5 * CARD_W + CARD_GAP - 36;
+          const pacmanTop = CARD_TOP + CARD_H + (bannerTop - (CARD_TOP + CARD_H) - 72) / 2;
 
-        {/* ── Ghosts chasing Pac-Man with staggered delays ── */}
-        {/* Red ghost — closest chaser */}
-        <motion.img
-          src="/images/about_us_assets/ghostr.svg"
-          alt="Blinky"
-          draggable={false}
-          className="absolute z-14 pointer-events-none"
-          style={{ top: ANIM_Y + 1, width: 70, height: 74, imageRendering: "pixelated" }}
-          animate={{ x: [-90, canvasWidth + 90] }}
-          transition={{ repeat: Infinity, duration: 9, ease: "linear", delay: 1.1, repeatDelay: 0 }}
-        />
-        {/* Orange ghost */}
-        <motion.img
-          src="/images/about_us_assets/ghosto.svg"
-          alt="Clyde"
-          draggable={false}
-          className="absolute z-14 pointer-events-none"
-          style={{ top: ANIM_Y + 1, width: 70, height: 74, imageRendering: "pixelated" }}
-          animate={{ x: [-90, canvasWidth + 90] }}
-          transition={{ repeat: Infinity, duration: 9, ease: "linear", delay: 2.1, repeatDelay: 0 }}
-        />
-        {/* Blue ghost — scattering (moves right→left, opposite direction) */}
-        <motion.img
-          src="/images/about_us_assets/ghostb.png"
-          alt="Inky"
-          draggable={false}
-          className="absolute z-14 pointer-events-none"
-          style={{ top: ANIM_Y - 5, width: 70, height: 74, imageRendering: "pixelated" }}
-          animate={{ x: [canvasWidth + 90, -90] }}
-          transition={{ repeat: Infinity, duration: 11, ease: "linear", delay: 0.5, repeatDelay: 0 }}
-        />
-        {/* Pink ghost — slower, also right→left */}
-        <motion.img
-          src="/images/about_us_assets/ghost.svg"
-          alt="Pinky"
-          draggable={false}
-          className="absolute z-14 pointer-events-none"
-          style={{ top: ANIM_Y + 2, width: 70, height: 74, imageRendering: "pixelated" }}
-          animate={{ x: [canvasWidth + 90, -90] }}
-          transition={{ repeat: Infinity, duration: 13, ease: "linear", delay: 1.8, repeatDelay: 0 }}
-        />
+          const characters = [
+            {
+              id: "blue-ghost",
+              src: "/images/about_us_assets/ghostb.png",
+              left: groupLeft + CARD_W + (CARD_GAP - 60) / 2,
+              top: CARD_TOP + CARD_H - 105,
+              cloudLeft: groupLeft + CARD_W + (CARD_GAP - 110) / 2,
+              cloudTop: CARD_TOP + CARD_H - 65,
+              cloudWidth: 110,
+              class: "ghost-look-right",
+              delay: "0s",
+            },
+            {
+              id: "orange-ghost",
+              src: "/images/about_us_assets/ghosto.svg",
+              left: groupLeft + 2 * CARD_W + CARD_GAP + (CARD_GAP - 60) / 2,
+              top: CARD_TOP + 65,
+              cloudLeft: groupLeft + 2 * CARD_W + CARD_GAP + (CARD_GAP - 110) / 2,
+              cloudTop: CARD_TOP + 110,
+              cloudWidth: 110,
+              class: "ghost-look-left",
+              delay: "1s",
+            },
+            {
+              id: "pink-ghost",
+              src: "/images/about_us_assets/ghost.svg",
+              left: bannerLeft - 100,
+              top: bannerTop - 35,
+              cloudLeft: bannerLeft - 125,
+              cloudTop: bannerTop + 10,
+              cloudWidth: 110,
+              class: "ghost-look-right",
+              delay: "0.5s",
+            },
+            {
+              id: "red-ghost",
+              src: "/images/about_us_assets/ghostr.svg",
+              left: bannerLeft + bannerW + 35,
+              top: bannerTop - 35,
+              cloudLeft: bannerLeft + bannerW + 10,
+              cloudTop: bannerTop + 10,
+              cloudWidth: 110,
+              class: "ghost-look-left",
+              delay: "1.5s",
+            },
+          ];
+
+          return (
+            <>
+              {/* Clouds under ghosts */}
+              {characters.map((char) => (
+                <img
+                  key={`cloud-${char.id}`}
+                  src="/cloud_pixel.svg"
+                  alt=""
+                  draggable={false}
+                  className="absolute pointer-events-none z-10 opacity-70 pixelated"
+                  style={{
+                    left: char.cloudLeft,
+                    top: char.cloudTop,
+                    width: char.cloudWidth,
+                    imageRendering: "pixelated",
+                  }}
+                />
+              ))}
+
+              {/* Pacman moving horizontally back & forth */}
+              <motion.div
+                className="absolute z-20 pointer-events-none"
+                style={{
+                  left: 0,
+                  top: pacmanTop,
+                  width: 72,
+                  height: 72,
+                }}
+                animate={{
+                  x: [groupLeft + 20, groupLeft + groupW - 92, groupLeft + 20],
+                  scaleX: [1, 1, -1, -1, 1],
+                }}
+                transition={{
+                  x: { repeat: Infinity, duration: 14, ease: "linear" },
+                  scaleX: { repeat: Infinity, duration: 14, ease: "linear", times: [0, 0.499, 0.5, 0.999, 1] }
+                }}
+              >
+                <PacmanIcon style={{ width: "100%", height: "100%" }} />
+              </motion.div>
+
+              {/* Ghosts */}
+              {characters.map((char) => (
+                <div
+                  key={char.id}
+                  className="absolute z-20 pointer-events-none ghost-bob"
+                  style={{
+                    left: char.left,
+                    top: char.top,
+                    width: 60,
+                    height: 64,
+                    animationDelay: char.delay,
+                  }}
+                >
+                  <img
+                    src={char.src}
+                    alt={char.id}
+                    className={`w-full h-full ${char.class}`}
+                    style={{
+                      imageRendering: "pixelated",
+                      animationDelay: char.delay,
+                    }}
+                    draggable={false}
+                  />
+                </div>
+              ))}
+            </>
+          );
+        })()}
 
         {/* ── Contact Us Banner — small, close to ground ── */}
         <div

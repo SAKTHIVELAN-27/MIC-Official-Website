@@ -92,6 +92,16 @@ const LandingPage = () => {
   const router = useRouter();
   const [selectedIdx, setSelectedIdx] = useState(0);
   const [windowStart, setWindowStart] = useState(0);
+  const [isHoverEnabled, setIsHoverEnabled] = useState(true);
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const enableHoverTemporarily = useCallback(() => {
+    setIsHoverEnabled(false);
+    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+    hoverTimeoutRef.current = setTimeout(() => {
+      setIsHoverEnabled(true);
+    }, 200);
+  }, []);
 
   // Measure a single item's rendered height so the scroll animation is pixel-perfect
   const firstItemRef = useRef<HTMLDivElement>(null);
@@ -106,7 +116,11 @@ const LandingPage = () => {
     // Small delay to let layout settle after fonts load
     const id = setTimeout(measure, 80);
     window.addEventListener("resize", measure);
-    return () => { clearTimeout(id); window.removeEventListener("resize", measure); };
+    return () => {
+      clearTimeout(id);
+      window.removeEventListener("resize", measure);
+      if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+    };
   }, []);
 
   // Slide the window whenever selectedIdx goes out of the visible range
@@ -122,20 +136,59 @@ const LandingPage = () => {
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === "ArrowDown") {
       e.preventDefault();
+      enableHoverTemporarily();
       setSelectedIdx(i => (i + 1) % MENU_ITEMS.length);
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
+      enableHoverTemporarily();
       setSelectedIdx(i => (i - 1 + MENU_ITEMS.length) % MENU_ITEMS.length);
     } else if (e.key === "Enter") {
       e.preventDefault();
       router.push(MENU_ITEMS[selectedIdx].href);
     }
-  }, [selectedIdx, router]);
+  }, [selectedIdx, router, enableHoverTemporarily]);
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleKeyDown]);
+
+  /* ── Scroll and Swipe navigation ───────────────────────────────────────── */
+  const handleWheel = useCallback((e: React.WheelEvent) => {
+    if (MENU_ITEMS.length <= VISIBLE) return;
+    enableHoverTemporarily();
+    if (e.deltaY > 0) {
+      setSelectedIdx(i => Math.min(i + 1, MENU_ITEMS.length - 1));
+    } else if (e.deltaY < 0) {
+      setSelectedIdx(i => Math.max(i - 1, 0));
+    }
+  }, [enableHoverTemporarily]);
+
+  const touchStartY = useRef<number | null>(null);
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartY.current = e.touches[0].clientY;
+  }, []);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (touchStartY.current === null) return;
+    const currentY = e.touches[0].clientY;
+    const diff = touchStartY.current - currentY;
+
+    if (Math.abs(diff) > 30) {
+      enableHoverTemporarily();
+      if (diff > 0) {
+        setSelectedIdx(i => Math.min(i + 1, MENU_ITEMS.length - 1));
+      } else {
+        setSelectedIdx(i => Math.max(i - 1, 0));
+      }
+      touchStartY.current = currentY;
+    }
+  }, [enableHoverTemporarily]);
+
+  const handleTouchEnd = useCallback(() => {
+    touchStartY.current = null;
+  }, []);
 
   const canScrollUp   = windowStart > 0;
   const canScrollDown = windowStart + VISIBLE < MENU_ITEMS.length;
@@ -198,11 +251,11 @@ const LandingPage = () => {
 
       {/* ── CENTRAL COLUMN: ropes → signboard → scrolling nav ─────────── */}
       <div
-        className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-none select-none"
+        className="central-column absolute left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-none select-none"
         style={{ top: 0, width: "clamp(320px, 54vw, 700px)", zIndex: 29 }}
       >
         {/* Ropes */}
-        <div className="relative w-full flex justify-between px-[8%]" style={{ height: "clamp(80px, 11vh, 130px)" }}>
+        <div className="rope-container relative w-full flex justify-between px-[8%]" style={{ height: "clamp(80px, 11vh, 130px)" }}>
           <div className="relative" style={{ width: 14, height: "100%" }}>
             <Image src="/hanging_ropes.svg" alt="Left rope" fill className="object-top object-contain" />
           </div>
@@ -233,8 +286,12 @@ const LandingPage = () => {
         ─────────────────────────────────────────────────────────────── */}
         <nav
           aria-label="Main navigation"
-          className="font-press-start pointer-events-auto w-full flex flex-col items-center"
-          style={{ marginTop: "clamp(6px, 1vh, 16px)" }}
+          className="font-press-start pointer-events-auto w-full flex flex-col items-center select-none"
+          style={{ marginTop: "clamp(6px, 1vh, 16px)", touchAction: "none" }}
+          onWheel={handleWheel}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
         >
           {/* Up scroll indicator — only shown when items above are hidden */}
           <motion.div
@@ -275,7 +332,7 @@ const LandingPage = () => {
                   key={idx}
                   ref={idx === 0 ? firstItemRef : undefined}
                   style={{
-                    height: itemH || "auto",
+                    height: "auto",
                     display: "flex",
                     alignItems: "center",
                     width: "100%",
@@ -290,8 +347,10 @@ const LandingPage = () => {
                   >
                     <Link
                       href={item.href}
-                      onMouseEnter={() => setSelectedIdx(idx)}
-                      className="flex items-center gap-1"
+                      onMouseEnter={() => {
+                        if (isHoverEnabled) setSelectedIdx(idx);
+                      }}
+                      className="nav-item-link flex items-center gap-1"
                       style={{
                         fontSize: "clamp(11px, 1.5vw, 19px)",
                         color: selectedIdx === idx ? "#fff" : "#1a5ce0",
