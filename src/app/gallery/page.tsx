@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
+import MobileGalleryView from './components/MobileGalleryView';
 
 interface EventData {
   id: number;
@@ -497,152 +498,71 @@ const GalleryPage: React.FC = () => {
 
   if (isMobile) {
     return (
-      <div
-        className="w-full min-h-[100dvh] overflow-x-hidden overflow-y-auto flex flex-col items-center py-6 px-4 gap-6 select-none"
-        style={{
-          background: "linear-gradient(180deg, #1188EE 0%, #0E8AEA 25%, #1093EB 35%, #1197EC 46%, #16B6F4 52%, #10CBF1 56%, #0FC6F1 60%, #15DEF0 65%, #15DEF0 81%)",
-        }}
-      >
+      <>
         <style>{`
           body {
-            background: linear-gradient(180deg, #1188EE 0%, #0E8AEA 25%, #1093EB 35%, #1197EC 46%, #16B6F4 52%, #10CBF1 56%, #0FC6F1 60%, #15DEF0 65%, #15DEF0 81%) !important;
             overflow-y: auto !important;
           }
           img[alt="MIC Logo"], img[src*="mic-logo"] { display: none !important; }
           button[aria-label="Open navigation"], .z-\[60\] { display: none !important; }
         `}</style>
 
-        {/* Top Bar */}
-        <div className="w-full flex justify-between items-center z-40 px-2 shrink-0">
-          <Link href="/main" onClick={() => playRetroSound("select")}>
-            <Image src="/mic_logo_pixel.svg" alt="MIC Pixel Logo" width={48} height={48} className="pixelated" priority />
-          </Link>
-          <Link href="/main" onClick={() => playRetroSound("select")}>
-            <Image src="/close_button.svg" alt="Close" width={40} height={40} priority />
-          </Link>
-        </div>
+        <MobileGalleryView
+          events={EVENTS}
+          onEventClick={(event) => {
+            playRetroSound("open");
+            setActiveEvent(event);
+          }}
+          onSound={playRetroSound}
+        />
 
-        {/* Page Title */}
-        <h1 className="font-press-start text-2xl text-black tracking-wider text-center drop-shadow-[3px_3px_0px_rgba(255,255,255,0.4)]">
-          Gallery Wall
-        </h1>
-
-        {/* Vertical Event Cards Grid */}
-        <div className="w-full max-w-sm flex flex-col gap-6 items-center z-20 pb-8">
-          {EVENTS.map((event) => (
-            <div
-              key={event.id}
-              onClick={() => handleFrameClick(event)}
-              className="w-full flex flex-col bg-[#FFE4D6] border-4 border-black rounded-[8px] shadow-[6px_6px_0px_rgba(0,0,0,0.25)] overflow-hidden cursor-pointer hover:scale-[1.02] active:scale-95 transition-transform duration-200"
-            >
-              {/* Header */}
-              <div className="w-full bg-[#A93710] border-b-4 border-black py-2 flex items-center justify-center shrink-0">
-                <span className="font-press-start text-xs text-black tracking-widest font-extrabold">
-                  EVENT
-                </span>
-              </div>
-              {/* Image Box with explicit height */}
-              <div className="p-3 bg-[#FFE4D6]">
-                <div className="relative w-full h-[180px] bg-white border-4 border-black overflow-hidden rounded-[4px]">
-                  <Image
-                    src={event.image}
-                    fill
-                    alt={event.title}
-                    className="object-cover"
-                  />
-                </div>
-                <div className="mt-2.5 text-center">
-                  <span className="font-press-start text-[11px] text-black block mb-1">
-                    {event.title}
-                  </span>
-                  <span className="font-press-start text-[9px] text-[#A93710]">
-                    ★ {event.date} ★
-                  </span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Marquee Ground Footer */}
-        <div className="w-full h-14 border-t-4 border-black bg-[#DD9955] overflow-hidden flex items-center shrink-0 mt-auto">
-          <div className="flex whitespace-nowrap animate-marquee">
-            {[0, 1].map((r) => (
-              <span key={r} className="inline-flex items-center shrink-0 text-[11px] text-[#CC7700] uppercase font-bold font-press-start">
-                {Array(4)
-                  .fill("MICROSOFT INNOVATIONS CLUB TENURE 2026-2027")
-                  .map((t, i) => (
-                    <React.Fragment key={i}>
-                      <span>{t}</span>
-                      <img src="/mic_logo_pixel.png" alt="" className="w-4 h-4 mx-4 pixelated" />
-                    </React.Fragment>
-                  ))}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Event Details Modal Popup */}
+        {/* ── Event Detail Modal (shared with desktop) ── */}
         <AnimatePresence>
           {activeEvent && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 select-none"
-              onClick={() => {
-                playRetroSound("select");
-                setActiveEvent(null);
-              }}
+              className="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 select-none"
+              onClick={() => { playRetroSound("select"); setActiveEvent(null); }}
             >
               <motion.div
                 initial={{ scale: 0.9, y: 20 }}
                 animate={{ scale: 1, y: 0 }}
                 exit={{ scale: 0.9, y: 20 }}
-                className="bg-[#FFE4D6] border-4 border-black rounded-[8px] max-w-xl w-full max-h-[90vh] flex flex-col overflow-hidden shadow-[8px_8px_0px_rgba(0,0,0,0.35)]"
+                className="bg-[#FFE4D6] border-4 border-black rounded-[8px] max-w-sm w-full max-h-[90dvh] flex flex-col overflow-hidden shadow-[8px_8px_0px_rgba(0,0,0,0.35)]"
                 onClick={(e) => e.stopPropagation()}
               >
                 {/* Modal Header */}
                 <div className="bg-[#A93710] border-b-4 border-black py-3 px-4 flex justify-between items-center shrink-0">
-                  <span className="font-press-start text-xs md:text-sm text-black tracking-wider uppercase font-extrabold">
+                  <span className="font-press-start text-[10px] text-black tracking-wider uppercase font-extrabold">
                     Event Details
                   </span>
                   <button
-                    onClick={() => {
-                      playRetroSound("select");
-                      setActiveEvent(null);
-                    }}
-                    className="font-press-start text-xs text-black border-2 border-black bg-white px-2 py-0.5 shadow-[2px_2px_0px_rgba(0,0,0,1)] active:translate-y-0.5 active:shadow-none hover:bg-slate-100"
+                    onClick={() => { playRetroSound("select"); setActiveEvent(null); }}
+                    className="font-press-start text-[10px] text-black border-2 border-black bg-white px-2 py-0.5 shadow-[2px_2px_0px_rgba(0,0,0,1)] active:translate-y-0.5 active:shadow-none"
                   >
                     X
                   </button>
                 </div>
 
                 {/* Modal Body */}
-                <div className="p-5 flex flex-col items-center overflow-y-auto flex-grow no-scrollbar">
-                  <div className="relative w-full h-[180px] sm:h-[240px] border-4 border-black bg-white overflow-hidden mb-4 shrink-0">
-                    <Image
-                      src={activeEvent.image}
-                      fill
-                      alt={activeEvent.title}
-                      className="object-cover"
-                    />
+                <div className="p-4 flex flex-col items-center overflow-y-auto flex-grow">
+                  <div className="relative w-full h-[160px] border-4 border-black bg-white overflow-hidden mb-4 shrink-0">
+                    <Image src={activeEvent.image} fill alt={activeEvent.title} className="object-cover" />
                   </div>
-                  <h3 className="font-press-start text-base text-[#A93710] text-center mb-1.5 leading-snug drop-shadow-[1px_1px_0px_#fff] uppercase font-bold">
+                  <h3 className="font-press-start text-[12px] text-[#A93710] text-center mb-1 leading-snug uppercase font-bold">
                     {activeEvent.title}
                   </h3>
-                  <span className="font-ibm-plex-mono text-[11px] font-extrabold text-gray-700 uppercase tracking-widest mb-3">
+                  <span className="font-ibm-plex-mono text-[10px] font-extrabold text-gray-600 uppercase tracking-widest mb-3">
                     ★ {activeEvent.date} ★
                   </span>
-                  <p className="font-ibm-plex-mono text-sm text-black text-center leading-relaxed font-semibold max-w-md mb-6">
+                  <p className="font-ibm-plex-mono text-[11px] text-black text-center leading-relaxed mb-5">
                     {activeEvent.desc}
                   </p>
                   <button
-                    onClick={() => {
-                      playRetroSound("select");
-                      setActiveEvent(null);
-                    }}
-                    className="px-6 py-2.5 bg-white hover:bg-slate-100 text-black border-4 border-black font-press-start text-xs shadow-[4px_4px_0px_rgba(0,0,0,1)] active:translate-y-0.5 active:translate-x-0.5 active:shadow-none transition-transform shrink-0"
+                    onClick={() => { playRetroSound("select"); setActiveEvent(null); }}
+                    className="px-5 py-2 bg-white text-black border-4 border-black font-press-start text-[9px] shadow-[4px_4px_0px_rgba(0,0,0,1)] active:translate-y-0.5 active:shadow-none shrink-0"
                   >
                     CLOSE WINDOW
                   </button>
@@ -651,7 +571,7 @@ const GalleryPage: React.FC = () => {
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
+      </>
     );
   }
 
